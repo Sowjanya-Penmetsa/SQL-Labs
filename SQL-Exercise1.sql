@@ -162,14 +162,15 @@ use CarRental;
 
 create table Categories(Id int primary key identity not null,
 CategoryName nvarchar(30) not null,
-DailyRate numeric(4,2),
-WeeklyRate numeric(4,2),
-MonthlyRate numeric(4,2),
-WeekendRate numeric(4,2));
+DailyRate int not null,
+WeeklyRate int not null,
+MonthlyRate int not null,
+WeekendRate int not null);
+
 
 insert into Categories values('ada',34,23,56,67),
 ('ytyt',56,78,45,34),
-('tytu',67.5,67,34.5,23.5)
+('tytu',67,67,34,23)
 
 select * from Categories;
 
@@ -178,7 +179,7 @@ PlateNumber nvarchar(20) not null,
 manufacturer nvarchar(30),
 model nvarchar(20),
 CarYear date,
-CategeryId int foreign key references Categories(Id),
+CategoryId int foreign key references Categories(Id),
 doors int,
 picture varbinary(max),
 condition char(1) not null check(condition='G' or condition='B'),
@@ -234,8 +235,9 @@ Notes nvarchar(max));
  
 
 insert into RentalOrders values(1,1,2,34.5,10,34,24,'2014-09-06','2014-11-04',58,34.6,2.5,'sdffdsg',null),
-(2,1,3,34.5,10,34,24,'2014-09-06','2014-11-04',58,34.6,2.5,'sdffdsg',null),
-(3,1,1,34.5,10,34,24,'2014-09-06','2014-11-04',58,34.6,2.5,'sdffdsg',null)
+(2,2,3,34.5,10,34,24,'2014-09-06','2014-11-04',58,34.6,2.5,'sdffdsg',null),
+(1,1,1,34.5,10,34,24,'2014-09-06','2014-11-04',58,34.6,2.5,'sdffdsg',null)
+
 -------------Create a hotel database---------------
 
 create database hotel;
@@ -292,19 +294,19 @@ insert into BedTypes values('single','sfsdfsd'),
 
 create table Rooms
 (RoomNumber int primary key not null,
-RoomType nvarchar(50) not null,
-BedType nvarchar(50) not null,
+RoomType nvarchar(50) not null foreign key references Roomtypes(roomtype),
+BedType nvarchar(50) not null foreign key references Bedtypes(bedtype),
 Rate decimal(10, 2) not null,
-RoomStatus nvarchar(50) not null,
+RoomStatus nvarchar(50) not null foreign key references roomstatus(roomstatus),
 Notes nvarchar(max));
 
-insert into Rooms Values(1,'ac','single',200.60,'free','fdgfd'),
-(2,'non_ac','double',300,'reserved',null),
-(3,'five_star','triple',500,'occupied',null)
+insert into Rooms Values(1,'Ac','single',200.60,'free','fdgfd'),
+(2,'non-Ac','double',300,'reserverd',null),
+(3,'five-star','triple',500,'occupied',null)
 
 create table Payments
 (Id int primary key not null,
-EmployeeId int not null,
+EmployeeId int not null foreign key references Employees(id),
 PaymentDate date not null,
 AccountNumber int not null,
 FirstDateOccupied date not null,
@@ -322,17 +324,17 @@ insert into Payments values(1,1,'2006-09-06',05657656,'2015-09-04','2015-07-06',
 
 CREATE TABLE Occupancies
 (Id int primary key NOT NULL,
-EmployeeId int not null,
+EmployeeId int not null foreign key references Employees(id),
 DateOccupied date not null,
-AccountNumber int not null,
-RoomNumber int not null,
+AccountNumber int not null foreign key references customers(accnumber),
+RoomNumber int not null foreign key references rooms(roomnumber),
 RateApplied decimal(10, 2),
 PhoneCharge int not null,
 Notes nvarchar(max));
 
-insert into occupancies values(1,1,'2003-09-08',5576557,1,450.80,67,null),
-(2,2,'2006-07-09',7657576,2,678.90,34,'ghjgh'),
-(3,2,'2008-05-06',76778678,3,568,78,null)
+insert into occupancies values(1,1,'2003-09-08',1,1,450.80,67,null),
+(2,2,'2006-07-09',1,2,678.90,34,'ghjgh'),
+(3,2,'2008-05-06',2,3,568,78,null)
 
 -------------create Lexicon Database----------------
 
